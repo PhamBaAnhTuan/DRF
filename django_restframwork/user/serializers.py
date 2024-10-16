@@ -16,7 +16,6 @@ class UserSerializer(serializers.ModelSerializer):
       return user
    
    def validate_username(self, value):
-      # Check if the username already exists
       if Customer.objects.filter(username=value).exists():
          raise serializers.ValidationError("This username is already taken. Please choose another one.")
       return value
