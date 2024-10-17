@@ -4,24 +4,31 @@ from rest_framework import viewsets
 from rest_framework import status, generics
 from rest_framework.decorators import action
 
-from django.contrib.auth.hashers import make_password
-# from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from rest_framework.permissions import IsAuthenticated, AllowAny
-# from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope, TokenHasScope
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 
 from book.serializers import BookSerializer, CategorySerializer
 from book.models import Book, Category
-   
+
 class CategoryViewSet(viewsets.ModelViewSet):
-   # permission_classes = [IsAuthenticated, TokenHasReadWriteScope]
-   permission_classes = [AllowAny]
-   
    queryset = Category.objects.all()
    serializer_class = CategorySerializer
-
+   permission_classes = [IsAuthenticated]
+   
+   def get_permissions(self):
+      if self.action in ['list', 'retrieve']:
+         return [AllowAny()]
+      elif self.action in ['create', 'update', 'partial_update', 'destroy']:
+         return [IsAdminUser()]
+      return super().get_permissions()
+   
 class BookViewSet(viewsets.ModelViewSet):
-   # permission_classes = [IsAuthenticated, TokenHasReadWriteScope]
-   permission_classes = [AllowAny]
-     
    queryset = Book.objects.all()
    serializer_class = BookSerializer
+   permission_classes = [IsAuthenticated]
+   
+   def get_permissions(self):
+      if self.action in ['list', 'retrieve']:
+         return [AllowAny()]
+      if self.action in ['create', 'update', 'partial_update', 'destroy']:
+         return [IsAdminUser()]
+      return super().get_permissions()
