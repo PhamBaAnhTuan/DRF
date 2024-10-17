@@ -52,8 +52,9 @@ INSTALLED_APPS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        # 'rest_framework.authentication.TokenAuthentication',
         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
@@ -61,9 +62,13 @@ REST_FRAMEWORK = {
 }
 LOGIN_URL = '/admin/login/'
 OAUTH2_PROVIDER = {
-    'SCOPES': {'read': 'Read scope', 'write': 'Write scope', 'groups': 'Access to your groups'},
+    'SCOPES': {
+        'read': 'Read scope', 
+        'write': 'Write scope', 
+        'admin': 'Admin scope',
+    },
     # 'ACCESS_TOKEN_EXPIRE_SECONDS': 36000,  # Access token expiration time
-    'REFRESH_TOKEN_EXPIRE_SECONDS': 1209600,  # Refresh token expiration time
+    # 'REFRESH_TOKEN_EXPIRE_SECONDS': 1209600,  # Refresh token expiration time
     'ROTATE_REFRESH_TOKENS': True,  # Rotate refresh tokens on use
     'APPLICATION_MODEL': 'oauth2_provider.Application',
 }
